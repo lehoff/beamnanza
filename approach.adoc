@@ -54,6 +54,12 @@ Do not expect this to be a one-pass process. It is best done as an iterative thi
 where entities are refined, split, merged, added and removed as more knowledge about
 how to solve the problem at hand emerges.
 
+TIP: Start scribbling on paper - it is easier to be creative when you are not
+constrained by a tool.
+
+TIP: Use the sequence diagrams in PlantUML (plantuml.org) to document the MSCs once
+you have done enough scribbling on paper.
+
 == Erlang/Elixir advice
 
 The implementation of a message in Erlang/Elixir should be a function exported from
