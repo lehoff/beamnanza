@@ -1,0 +1,91 @@
+= Protocol Focused Design
+
+Torben Hoffmann
+torben.lehoff@gmail.com
+
+:imagesdir: images
+:doctype: article
+////      
+:toc:
+:toclevels: 2
+////
+:numbered:
+
+++++
+<link rel="stylesheet"  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.1.0/css/font-awesome.min.css">
+++++
+
+:icons: font
+
+////
+:source-highlighter: rouge
+////
+
+:source-highlighter: pygments
+:source-language: python
+
+:pygmetns-style: tango
+:pygments-linenums-mode: inline
+
+:stem: asciimath
+
+This approach will help find the protocols between the entities in the system.
+
+Though there are things specific to Erlang/Elixir in this approach, it works equally
+well with other programming languages.
+
+Protocols are merely any interaction between two entities. Protocols are everywhere
+in software.
+
+== Steps
+
+. Identify all entities in the system.
+. Connect the entities that are talking to each other and describe the type of
+messages exchanged.
+. Describe the flow of messages using MSCs (Message Sequence Charts).
+.. Mark messages as asynchronous or synchronous (A or S).
+.. If a data/control plane architecture is in play mark the messages as data or
+control (D or C).
+.. Focus on the golden path first. I.e., no errors in the communication and no
+failing entities.
+. Write type specifications for the messages.
+
+Do not expect this to be a one-pass process. It is best done as an iterative thing,
+where entities are refined, split, merged, added and removed as more knowledge about
+how to solve the problem at hand emerges.
+
+== Erlang/Elixir advice
+
+The implementation of a message in Erlang/Elixir should be a function exported from
+the module that represents the entity to which the message will be sent.
+
+The idea is that the underlying process is wrapped in a module and the interface for
+communicating with the process is given as a number of exported functions.
+
+NOTE: There are a small number of occasions where it is impossible to do it this way.
+The first approach should always be to provide an exported function to represent a
+message as it will work most of the time.
+
+This is important for a number of reasons:
+
+* The implementation of how an incoming message is handled can be changed freely when
+  the outside doesn't know about the internal message structure or how an entity is
+  implemented.
+* It is easier to understand a system where the messages are out in the open instead
+  of burried deeply inside the implementation of the entities.
+
+In 95% of the cases the standard OTP components should be sued to implement an
+entity. `gen_server` and `gen_statem` (and previously `gen_fsm`) are so powerful and
+flexible that they work most of the time. In some case using a component from a
+well-tested library such as cowboy will also work.
+
+For the remaning 5% you have to roll your own process.
+
+NOTE: This does _not_ mean that you can just Pid-Bang messages to your processes from
+outside the module where they are created. All messages _must_ still be implemented
+as an exported function in the module representing an entity.
+
+And when you do roll your own process use the `proc_lib` module to spawn them as this
+will make sure you can easily fit your own processes into an OTP supervision
+hierarchy.
+
