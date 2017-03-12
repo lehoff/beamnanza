@@ -29,7 +29,8 @@
 -type harvest_result() :: {bn_beans:bean(), NoBeansHarvested:: bn_beans:count()}. 
                                   
 
--export_type([field/0]).
+-export_type([field/0,
+              harvest_result/0]).
 
 
 -spec plant(field(), bn_beans:bean()) -> {'forced_harvest', harvest_result()} |

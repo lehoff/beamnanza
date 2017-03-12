@@ -16,7 +16,7 @@
 -export_type([bean/0,
               count/0]).
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 -spec types(beamnanza:player_count()) -> [bean()].
 types(3) ->
     all_types() -- [cocoa];
